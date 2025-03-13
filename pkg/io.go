@@ -15,10 +15,10 @@ func NewInputOutput() *InputOutputService {
 }
 
 // extracts a specific column from a CSV file (equivalent to `awk '{print $N}'`).
-func (inou *InputOutputService) GetColumn(filename string, columnIndex int) ([]string, error) {
+func (inou *InputOutputService) GetColumn(filename string, columnIndex int) error {
 	file, err := os.Open(filename)
 	if err != nil {
-		return nil, fmt.Errorf("failed to open file: %v", err)
+		return fmt.Errorf("failed to open file: %v", err)
 	}
 	defer file.Close()
 
@@ -31,17 +31,18 @@ func (inou *InputOutputService) GetColumn(filename string, columnIndex int) ([]s
 			break
 		}
 		if err != nil {
-			return nil, fmt.Errorf("failed to read CSV: %v", err)
+			return fmt.Errorf("failed to read CSV: %v", err)
 		}
 
 		if columnIndex < 0 || columnIndex >= len(record) {
-			return nil, fmt.Errorf("column index %d is out of bounds", columnIndex)
+			return fmt.Errorf("column index %d is out of bounds", columnIndex)
 		}
 
 		columnData = append(columnData, record[columnIndex])
 	}
 
-	return columnData, nil
+	fmt.Println(strings.Join(columnData, "\n"))
+	return nil
 }
 
 // performs in-place text replacement in a file (equivalent to `sed -i 's/old/new/g'`).

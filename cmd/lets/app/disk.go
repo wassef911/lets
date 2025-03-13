@@ -10,8 +10,13 @@ import (
 
 var diskService = pkg.NewDisk()
 
+var ShowCmd = &cobra.Command{
+	Use:   "show",
+	Short: "Display Disk Information",
+}
+
 var DiskUsageCmd = &cobra.Command{
-	Use:   "show disk space",
+	Use:   "disk space",
 	Short: "Display disk usage for all mounts",
 	Run: func(cmd *cobra.Command, args []string) {
 		diskService.ShowDiskSpace()
@@ -19,29 +24,30 @@ var DiskUsageCmd = &cobra.Command{
 }
 
 var FolderUsageCmd = &cobra.Command{
-	Use:   "show folder size for [directory]",
+	Use:   "folder size for [directory]",
 	Short: "Display directory disk usage",
-	Args:  cobra.MinimumNArgs(0),
+	Args:  cobra.MinimumNArgs(3),
 	Run: func(cmd *cobra.Command, args []string) {
-		directory := args[0]
+		directory := args[len(args)-1]
 		diskService.ShowFolderSize(directory)
 	},
 }
 
 var LimitedFolderUsageCmd = &cobra.Command{
-	Use:   "show files over [size] in [directory]",
+	Use:   "files over [size] in [directory]",
 	Short: "Display directory disk usage with a min size limit",
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		size, err := strconv.ParseInt(args[0], 10, 64)
+		size, err := strconv.ParseFloat(args[1], 64)
 		if err != nil {
 			panic(err)
 		}
-		directory := args[1]
+		directory := args[len(args)-1]
 		diskService.ShowFolderSizeWithLimit(directory, size)
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(DiskUsageCmd, FolderUsageCmd)
+	ShowCmd.AddCommand(DiskUsageCmd, FolderUsageCmd, LimitedFolderUsageCmd)
+	rootCmd.AddCommand(ShowCmd)
 }

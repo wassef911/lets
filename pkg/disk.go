@@ -55,7 +55,7 @@ func (d *DiskService) ShowDiskSpace() error {
 }
 
 // calculates the size of a directory (equivalent to `du -sh /var`).
-func (d *DiskService) ShowFolderSize(path string) (string, error) {
+func (d *DiskService) ShowFolderSize(path string) error {
 	var totalSize int64
 
 	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
@@ -68,21 +68,23 @@ func (d *DiskService) ShowFolderSize(path string) (string, error) {
 		return nil
 	})
 	if err != nil {
-		return "", fmt.Errorf("failed to calculate folder size: %v", err)
+		return fmt.Errorf("failed to calculate folder size: %v", err)
 	}
 
-	return humanReadableSize(uint64(totalSize)), nil
+	var format string = humanReadableSize(uint64(totalSize))
+	fmt.Printf("%s %s\n", format, path)
+	return nil
 }
 
 // finds files larger than a specified size in a directory (equivalent to `find /home -type f -size +100M`).
-func (d *DiskService) ShowFolderSizeWithLimit(dir string, minSize int64) ([]string, error) {
+func (d *DiskService) ShowFolderSizeWithLimit(dir string, minSize float64) ([]string, error) {
 	var largeFiles []string
 
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		if !info.IsDir() && info.Size() > minSize {
+		if !info.IsDir() && float64(info.Size()) > minSize {
 			largeFiles = append(largeFiles, path)
 		}
 		return nil

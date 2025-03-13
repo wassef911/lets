@@ -11,21 +11,8 @@ import (
 var caseSensitive = true
 var searchService = pkg.NewSearch(caseSensitive)
 
-var searchCmd = &cobra.Command{
-	Use:   "search",
-	Short: "Search operations",
-	Run: func(cmd *cobra.Command, args []string) {
-		pattern := args[0]
-		directory := "."
-		if len(args) > 1 {
-			directory = args[1]
-		}
-		searchService.SearchFiles(pattern, directory)
-	},
-}
-
 var searchFilesCmd = &cobra.Command{
-	Use:   "files for <pattern> in [directory]",
+	Use:   "search files for <pattern> in [directory]",
 	Short: "Search files containing pattern",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -68,6 +55,5 @@ var findFilesCmd = &cobra.Command{
 
 func init() {
 	searchFilesCmd.Flags().BoolVarP(&caseSensitive, "case-sensitive", "c", caseSensitive, "Case-sensitive search")
-	searchCmd.AddCommand(searchFilesCmd, countMatchesCmd, findFilesCmd)
-	rootCmd.AddCommand(searchCmd)
+	rootCmd.AddCommand(searchFilesCmd, countMatchesCmd, findFilesCmd)
 }

@@ -8,7 +8,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "implementations",
+	Use:   "lets",
 	Short: "Human-friendly system administration toolkit",
 	Long:  `Human-friendly system administration toolkit.`,
 }

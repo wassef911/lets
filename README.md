@@ -57,11 +57,17 @@ Replace: awk, cut, sed
 # awk '{print $3}' data.csv
 $ lets get column 3 from data.csv	
 
-# Sum numeric values in a column	
-# awk '{sum+=$2} END{print sum}' data.csv
-$ lets sum column 2 in data.csv	
-
 # In-place text replacement	
 # sed -i 's/foo/bar/g' file.txt
 $ lets replace "foo" with "bar" in file.txt	
 ```
+
+
+# TODO
+* manuall test all commands
+    - search done
+* handle errors and panic properly 
+* write tests for all packages
+* getting files other than CSV
+* better validation
+* structured output / better logger

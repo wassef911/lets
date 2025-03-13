@@ -24,7 +24,6 @@ func (s *SearchService) SearchFiles(pattern, directory string) {
 		reFlags = regexp.MustCompile(`(?i)`)
 	}
 	re := regexp.MustCompile(reFlags.String() + regexp.QuoteMeta(pattern))
-
 	filepath.Walk(directory, func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
 			content, _ := ioutil.ReadFile(path)

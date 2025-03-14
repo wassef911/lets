@@ -27,7 +27,10 @@ func newSearchCmd(searchService pkg.SearchServiceInterface) *cobra.Command {
 				return
 			}
 
-			searchService.SearchFiles(pattern, directory)
+			err := searchService.SearchFiles(pattern, directory)
+			if err != nil {
+				panic(err)
+			}
 		},
 	}
 	return searchCmd
@@ -41,7 +44,10 @@ func newCountMatchesCmd(searchService pkg.SearchServiceInterface) *cobra.Command
 		Run: func(cmd *cobra.Command, args []string) {
 			pattern := args[1]
 			file := args[3]
-			searchService.CountMatches(pattern, file)
+			err := searchService.CountMatches(pattern, file)
+			if err != nil {
+				panic(err)
+			}
 		},
 	}
 	return countMatchesCmd
@@ -59,7 +65,10 @@ func newFindFilesCmd(searchService pkg.SearchServiceInterface) *cobra.Command {
 				return
 			}
 			fmt.Println(glob, directory, days)
-			searchService.FindFiles(glob, directory, days)
+			cmdErr := searchService.FindFiles(glob, directory, days)
+			if cmdErr != nil {
+				panic(err)
+			}
 		},
 	}
 	return findFilesCmd

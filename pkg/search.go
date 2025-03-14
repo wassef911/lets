@@ -11,9 +11,9 @@ import (
 )
 
 type SearchServiceInterface interface {
-	SearchFiles(pattern, directory string)
-	CountMatches(pattern, filename string)
-	FindFiles(glob, directory string, days int)
+	SearchFiles(pattern, directory string) error
+	CountMatches(pattern, filename string) error
+	FindFiles(glob, directory string, days int) error
 }
 type SearchService struct {
 	CaseSensitive bool
@@ -23,7 +23,7 @@ func NewSearch(caseSensitive bool) *SearchService {
 	return &SearchService{CaseSensitive: caseSensitive}
 }
 
-func (s *SearchService) SearchFiles(pattern, directory string) {
+func (s *SearchService) SearchFiles(pattern, directory string) error {
 	reFlags := regexp.MustCompile("")
 	if !s.CaseSensitive {
 		reFlags = regexp.MustCompile(`(?i)`)
@@ -38,9 +38,10 @@ func (s *SearchService) SearchFiles(pattern, directory string) {
 		}
 		return nil
 	})
+	return nil
 }
 
-func (s *SearchService) CountMatches(pattern, filename string) {
+func (s *SearchService) CountMatches(pattern, filename string) error {
 	file, _ := os.Open(filename)
 	defer file.Close()
 
@@ -54,9 +55,10 @@ func (s *SearchService) CountMatches(pattern, filename string) {
 		}
 	}
 	fmt.Printf("Found %d matches in %s\n", count, filename)
+	return nil
 }
 
-func (s *SearchService) FindFiles(glob, directory string, days int) {
+func (s *SearchService) FindFiles(glob, directory string, days int) error {
 	cutoffTime := time.Now().AddDate(0, 0, -days)
 	pattern := filepath.Join(directory, glob)
 
@@ -67,4 +69,5 @@ func (s *SearchService) FindFiles(glob, directory string, days int) {
 			fmt.Printf("Found old file: %s (%s)\n", file, info.ModTime().Format("2006-01-02"))
 		}
 	}
+	return nil
 }

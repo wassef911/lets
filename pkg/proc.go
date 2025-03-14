@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -25,13 +26,13 @@ func NewProc() *ProcService {
 // lists all running processes (equivalent to `ps aux`).
 func (p *ProcService) Processes() error {
 	if !CommandExists("ps") {
-		return fmt.Errorf("'ps' command not found. Please ensure it is installed")
+		return errors.New("'ps' command not found. Please ensure it is installed")
 	}
 
 	cmd := exec.Command("ps", "aux")
 	output, err := cmd.Output()
 	if err != nil {
-		return fmt.Errorf("failed to list processes: %v", err)
+		return errors.New("failed to list processes: " + err.Error())
 	}
 
 	fmt.Println(string(output))
@@ -41,7 +42,7 @@ func (p *ProcService) Processes() error {
 // provides a live system resource view (equivalent to `htop`).
 func (p *ProcService) Resources() error {
 	if !CommandExists("htop") {
-		return fmt.Errorf("'htop' command not found. Please install it to use this feature")
+		return errors.New("'htop' command not found. Please install it to use this feature")
 	}
 
 	cmd := exec.Command("htop")
@@ -60,7 +61,7 @@ func (p *ProcService) Resources() error {
 	// Run htop
 	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("failed to monitor resources: %v", err)
+		return errors.New("failed to monitor resources: " + err.Error())
 	}
 
 	return nil
@@ -69,37 +70,37 @@ func (p *ProcService) Resources() error {
 // terminates a process by name (equivalent to `pkill <name>`).
 func (p *ProcService) KillProcessByName(processName string) error {
 	if !CommandExists("pgrep") {
-		return fmt.Errorf("'pgrep' command not found. Please ensure it is installed")
+		return errors.New("'pgrep' command not found. Please ensure it is installed")
 	}
 
 	// Find PIDs of processes with the given name
 	cmd := exec.Command("pgrep", processName)
 	output, err := cmd.Output()
 	if err != nil {
-		return fmt.Errorf("no processes found with name %s: %v", processName, err)
+		return errors.New("no processes found with name " + processName + " : " + err.Error())
 	}
 
 	// Parse PIDs
 	pids := strings.Fields(string(output))
 	if len(pids) == 0 {
-		return fmt.Errorf("no processes found with name %s", processName)
+		return errors.New("no processes found with name " + processName)
 	}
 
 	// Kill each process
 	for _, pidStr := range pids {
 		pid, err := strconv.Atoi(pidStr)
 		if err != nil {
-			return fmt.Errorf("invalid PID %s: %v", pidStr, err)
+			return errors.New("invalid PID " + pidStr + " : " + err.Error())
 		}
 
 		process, err := os.FindProcess(pid)
 		if err != nil {
-			return fmt.Errorf("failed to find process with PID %d: %v", pid, err)
+			return errors.New("failed to find process with PID " + strconv.Itoa(pid) + " : " + err.Error())
 		}
 
 		err = process.Kill()
 		if err != nil {
-			return fmt.Errorf("failed to kill process with PID %d: %v", pid, err)
+			return errors.New("failed to find process with PID " + strconv.Itoa(pid) + " : " + err.Error())
 		}
 
 		fmt.Printf("Successfully killed process %s (PID %d)\n", processName, pid)

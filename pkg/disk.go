@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -11,7 +12,7 @@ import (
 type DiskServiceInterface interface {
 	ShowDiskSpace() error
 	ShowFolderSize(path string) error
-	ShowFolderSizeWithLimit(dir string, minSize float64) ([]string, error)
+	ShowFolderSizeWithLimit(dir string, minSize float64) error
 }
 
 type DiskService struct{}
@@ -27,7 +28,7 @@ func (d *DiskService) ShowDiskSpace() error {
 	// mounted filesystems
 	mounts, err := os.ReadFile("/proc/mounts")
 	if err != nil {
-		return fmt.Errorf("failed to read mounts: %v", err)
+		return errors.New("failed to read mounts: " + err.Error())
 	}
 
 	fmt.Println("Filesystem      Size  Used  Avail  Use%  Mounted on")
@@ -74,7 +75,7 @@ func (d *DiskService) ShowFolderSize(path string) error {
 		return nil
 	})
 	if err != nil {
-		return fmt.Errorf("failed to calculate folder size: %v", err)
+		return errors.New("failed to calculate folder size: " + err.Error())
 	}
 
 	var format string = humanReadableSize(uint64(totalSize))
@@ -83,7 +84,7 @@ func (d *DiskService) ShowFolderSize(path string) error {
 }
 
 // finds files larger than a specified size in a directory (equivalent to `find /home -type f -size +100M`).
-func (d *DiskService) ShowFolderSizeWithLimit(dir string, minSize float64) ([]string, error) {
+func (d *DiskService) ShowFolderSizeWithLimit(dir string, minSize float64) error {
 	var largeFiles []string
 
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
@@ -96,10 +97,14 @@ func (d *DiskService) ShowFolderSizeWithLimit(dir string, minSize float64) ([]st
 		return nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to list large files: %v", err)
+		return errors.New("failed to list large files: " + err.Error())
 	}
 
-	return largeFiles, nil
+	for _, file := range largeFiles {
+		fmt.Println(file)
+	}
+
+	return nil
 }
 
 // humanReadableSize converts a size in bytes to a human-readable format.

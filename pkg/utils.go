@@ -1,7 +1,7 @@
 package pkg
 
 import (
-	"fmt"
+	"errors"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -26,11 +26,11 @@ func ParseFind(inputs []string) (glob string, directory string, days int, err er
 	// extract the glob (required)
 	namedIndex := findIndex(inputs, "named")
 	if namedIndex == -1 {
-		err = fmt.Errorf("invalid input format: 'named' keyword not found " + strings.Join(inputs, " "))
+		err = errors.New("invalid input format: 'named' keyword not found " + strings.Join(inputs, " "))
 		return
 	}
 	if namedIndex+1 >= len(inputs) {
-		err = fmt.Errorf("invalid input format: 'named' keyword not found " + strings.Join(inputs, " "))
+		err = errors.New("invalid input format: 'named' keyword not found " + strings.Join(inputs, " "))
 		return
 	}
 	glob = inputs[namedIndex+1]
@@ -49,7 +49,7 @@ func ParseFind(inputs []string) (glob string, directory string, days int, err er
 		daysStr := inputs[olderIndex+2]
 		days, err = strconv.Atoi(daysStr)
 		if err != nil {
-			err = fmt.Errorf("invalid days value: %v", err)
+			err = errors.New("invalid days value: " + err.Error())
 			return
 		}
 	}

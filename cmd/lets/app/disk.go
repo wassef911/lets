@@ -13,7 +13,10 @@ func newShowCmd(diskService pkg.DiskServiceInterface) *cobra.Command {
 		Use:   "disk space",
 		Short: "Display disk usage for all mounts",
 		Run: func(cmd *cobra.Command, args []string) {
-			diskService.ShowDiskSpace()
+			err := diskService.ShowDiskSpace()
+			if err != nil {
+				panic(err)
+			}
 		},
 	}
 
@@ -23,7 +26,10 @@ func newShowCmd(diskService pkg.DiskServiceInterface) *cobra.Command {
 		Args:  cobra.MinimumNArgs(3),
 		Run: func(cmd *cobra.Command, args []string) {
 			directory := args[len(args)-1]
-			diskService.ShowFolderSize(directory)
+			err := diskService.ShowFolderSize(directory)
+			if err != nil {
+				panic(err)
+			}
 		},
 	}
 
@@ -37,7 +43,10 @@ func newShowCmd(diskService pkg.DiskServiceInterface) *cobra.Command {
 				panic(err)
 			}
 			directory := args[len(args)-1]
-			diskService.ShowFolderSizeWithLimit(directory, size)
+			cmdErr := diskService.ShowFolderSizeWithLimit(directory, size)
+			if cmdErr != nil {
+				panic(err)
+			}
 		},
 	}
 	ShowCmd := &cobra.Command{

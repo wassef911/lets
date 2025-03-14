@@ -19,7 +19,10 @@ func newGetCmd(inputOutputService pkg.InputOutputServiceInterface) *cobra.Comman
 			if err != nil {
 				panic(err)
 			}
-			inputOutputService.GetColumn(csvPath, col)
+			cmdErr := inputOutputService.GetColumn(csvPath, col)
+			if cmdErr != nil {
+				panic(err)
+			}
 		},
 	}
 	return getCmd
@@ -34,7 +37,10 @@ func newReplaceCmd(inputOutputService pkg.InputOutputServiceInterface) *cobra.Co
 			foo := args[0]
 			bar := args[2]
 			filename := args[len(args)-1]
-			inputOutputService.ReplaceText(filename, foo, bar)
+			err := inputOutputService.ReplaceText(filename, foo, bar)
+			if err != nil {
+				panic(err)
+			}
 		},
 	}
 	return ReplaceCmd

@@ -1,26 +1,22 @@
 package app
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/wassef911/lets/pkg"
 )
 
-var rootCmd = &cobra.Command{
-	Use:   "lets",
-	Short: "Human-friendly system administration toolkit",
-	Long:  `Human-friendly system administration toolkit.`,
-}
-
-func Execute() {
-	// create services
-	diskService := pkg.NewDisk()
-	inputOutputService := pkg.NewInputOutput()
-	procService := pkg.NewProc()
-	searchService := pkg.NewSearch(true)
+func NewRootCmd(
+	diskService pkg.DiskServiceInterface,
+	inputOutputService pkg.InputOutputServiceInterface,
+	procService pkg.ProcServiceInterface,
+	searchService pkg.SearchServiceInterface,
+) *cobra.Command {
+	rootCmd := &cobra.Command{
+		Use:   "lets",
+		Short: "Human-friendly system administration toolkit",
+		Long:  `Human-friendly system administration toolkit.`,
+	}
 
 	// create commands
 	ShowCmd := newShowCmd(diskService)
@@ -36,9 +32,5 @@ func Execute() {
 	rootCmd.AddCommand(getCmd, ReplaceCmd)
 	rootCmd.AddCommand(InspectCmd, TerminateCmd)
 	rootCmd.AddCommand(searchFilesCmd, countMatchesCmd, findFilesCmd)
-
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	return rootCmd
 }

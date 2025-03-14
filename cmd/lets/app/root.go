@@ -5,6 +5,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/wassef911/lets/pkg"
 )
 
 var rootCmd = &cobra.Command{
@@ -14,13 +16,26 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
+	// create services
+	diskService := pkg.NewDisk()
+	inputOutputService := pkg.NewInputOutput()
+	procService := pkg.NewProc()
+	searchService := pkg.NewSearch(true)
 
-	rootCmd.AddCommand(getCmd, ReplaceCmd)
-	ShowCmd.AddCommand(DiskUsageCmd, FolderUsageCmd, LimitedFolderUsageCmd)
+	// create commands
+	ShowCmd := newShowCmd(diskService)
+	getCmd := newGetCmd(inputOutputService)
+	ReplaceCmd := newReplaceCmd(inputOutputService)
+	InspectCmd := newProcCmd(procService)
+	TerminateCmd := newTerminatedCmd(procService)
+	searchFilesCmd := newSearchCmd(searchService)
+	countMatchesCmd := newCountMatchesCmd(searchService)
+	findFilesCmd := newFindFilesCmd(searchService)
+	// hook to root
 	rootCmd.AddCommand(ShowCmd)
-	rootCmd.AddCommand(searchFilesCmd, countMatchesCmd, findFilesCmd)
-	InspectCmd.AddCommand(ProcessesCmd, ResourcesCmd)
+	rootCmd.AddCommand(getCmd, ReplaceCmd)
 	rootCmd.AddCommand(InspectCmd, TerminateCmd)
+	rootCmd.AddCommand(searchFilesCmd, countMatchesCmd, findFilesCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

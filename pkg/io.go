@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type InputOutputInterface interface {
+type InputOutputServiceInterface interface {
 	GetColumn(filename string, columnIndex int) error
 	ReplaceText(filename, oldText, newText string) error
 }

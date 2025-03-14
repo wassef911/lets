@@ -8,6 +8,11 @@ import (
 	"strings"
 )
 
+type InputOutputInterface interface {
+	GetColumn(filename string, columnIndex int) error
+	ReplaceText(filename, oldText, newText string) error
+}
+
 type InputOutputService struct{}
 
 func NewInputOutput() *InputOutputService {

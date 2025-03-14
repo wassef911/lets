@@ -1,7 +1,8 @@
-package app
+package pkg
 
 import (
 	"fmt"
+	"os/exec"
 	"strconv"
 	"strings"
 )
@@ -13,6 +14,12 @@ func findIndex(inputs []string, keyword string) int {
 		}
 	}
 	return -1
+}
+
+// commandExists checks if a command is available on machine
+func CommandExists(command string) bool {
+	_, err := exec.LookPath(command)
+	return err == nil
 }
 
 func ParseFind(inputs []string) (glob string, directory string, days int, err error) {

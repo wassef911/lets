@@ -46,8 +46,3 @@ var LimitedFolderUsageCmd = &cobra.Command{
 		diskService.ShowFolderSizeWithLimit(directory, size)
 	},
 }
-
-func init() {
-	ShowCmd.AddCommand(DiskUsageCmd, FolderUsageCmd, LimitedFolderUsageCmd)
-	rootCmd.AddCommand(ShowCmd)
-}

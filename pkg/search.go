@@ -10,6 +10,11 @@ import (
 	"time"
 )
 
+type SearchServiceInterface interface {
+	SearchFiles(pattern, directory string)
+	CountMatches(pattern, filename string)
+	FindFiles(glob, directory string, days int)
+}
 type SearchService struct {
 	CaseSensitive bool
 }

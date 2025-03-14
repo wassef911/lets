@@ -38,8 +38,3 @@ var TerminateCmd = &cobra.Command{
 		procService.KillProcessByName(name)
 	},
 }
-
-func init() {
-	InspectCmd.AddCommand(ProcessesCmd, ResourcesCmd)
-	rootCmd.AddCommand(InspectCmd, TerminateCmd)
-}

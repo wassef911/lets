@@ -8,6 +8,12 @@ import (
 	"syscall"
 )
 
+type DiskServiceInterface interface {
+	ShowDiskSpace() error
+	ShowFolderSize(path string) error
+	ShowFolderSizeWithLimit(dir string, minSize float64) ([]string, error)
+}
+
 type DiskService struct{}
 
 func NewDisk() *DiskService {

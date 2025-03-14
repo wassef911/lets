@@ -35,7 +35,3 @@ var ReplaceCmd = &cobra.Command{
 		inputOutputService.ReplaceText(filename, foo, bar)
 	},
 }
-
-func init() {
-	rootCmd.AddCommand(getCmd, ReplaceCmd)
-}

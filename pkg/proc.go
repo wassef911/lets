@@ -10,21 +10,21 @@ import (
 	"syscall"
 )
 
+type ProcServiceInterface interface {
+	Processes() error
+	Resources() error
+	KillProcessByName(processName string) error
+}
+
 type ProcService struct{}
 
 func NewProc() *ProcService {
 	return &ProcService{}
 }
 
-// commandExists checks if a command is available on machine
-func commandExists(command string) bool {
-	_, err := exec.LookPath(command)
-	return err == nil
-}
-
 // lists all running processes (equivalent to `ps aux`).
 func (p *ProcService) Processes() error {
-	if !commandExists("ps") {
+	if !CommandExists("ps") {
 		return fmt.Errorf("'ps' command not found. Please ensure it is installed")
 	}
 
@@ -40,7 +40,7 @@ func (p *ProcService) Processes() error {
 
 // provides a live system resource view (equivalent to `htop`).
 func (p *ProcService) Resources() error {
-	if !commandExists("htop") {
+	if !CommandExists("htop") {
 		return fmt.Errorf("'htop' command not found. Please install it to use this feature")
 	}
 
@@ -68,7 +68,7 @@ func (p *ProcService) Resources() error {
 
 // terminates a process by name (equivalent to `pkill <name>`).
 func (p *ProcService) KillProcessByName(processName string) error {
-	if !commandExists("pgrep") {
+	if !CommandExists("pgrep") {
 		return fmt.Errorf("'pgrep' command not found. Please ensure it is installed")
 	}
 

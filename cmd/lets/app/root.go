@@ -14,6 +14,14 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
+
+	rootCmd.AddCommand(getCmd, ReplaceCmd)
+	ShowCmd.AddCommand(DiskUsageCmd, FolderUsageCmd, LimitedFolderUsageCmd)
+	rootCmd.AddCommand(ShowCmd)
+	rootCmd.AddCommand(searchFilesCmd, countMatchesCmd, findFilesCmd)
+	InspectCmd.AddCommand(ProcessesCmd, ResourcesCmd)
+	rootCmd.AddCommand(InspectCmd, TerminateCmd)
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

@@ -49,7 +49,7 @@ var findFilesCmd = &cobra.Command{
 	Short: "Find files by name and age",
 	Args:  cobra.MinimumNArgs(3),
 	Run: func(cmd *cobra.Command, args []string) {
-		glob, directory, days, err := ParseFind(args)
+		glob, directory, days, err := pkg.ParseFind(args)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -57,9 +57,4 @@ var findFilesCmd = &cobra.Command{
 		fmt.Println(glob, directory, days)
 		searchService.FindFiles(glob, directory, days)
 	},
-}
-
-func init() {
-	searchFilesCmd.Flags().BoolVarP(&caseSensitive, "case-sensitive", "c", caseSensitive, "Case-sensitive search")
-	rootCmd.AddCommand(searchFilesCmd, countMatchesCmd, findFilesCmd)
 }

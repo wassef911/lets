@@ -1,9 +1,35 @@
-package app
+package pkg
 
 import (
 	"testing"
 )
 
+func TestCommandExists(t *testing.T) {
+	tests := []struct {
+		name       string
+		command    string
+		expectBool bool
+	}{
+		{
+			name:       "Valid command",
+			command:    "ls",
+			expectBool: true,
+		},
+		{
+			name:       "Invalid command",
+			command:    "invalidcommand",
+			expectBool: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if CommandExists(tt.command) != tt.expectBool {
+				t.Errorf("expected %v for command %s", tt.expectBool, tt.command)
+			}
+		})
+	}
+}
 func TestParseCommand(t *testing.T) {
 	tests := []struct {
 		name              string

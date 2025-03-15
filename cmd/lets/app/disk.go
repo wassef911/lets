@@ -8,12 +8,15 @@ import (
 	"github.com/wassef911/lets/pkg"
 )
 
-func NewShowCmd(diskService pkg.DiskServiceInterface) *cobra.Command {
+func NewShowCmd(
+	logger pkg.LoggerInterface,
+	diskService pkg.DiskServiceInterface) *cobra.Command {
 	DiskUsageCmd := &cobra.Command{
 		Use:   "disk space",
 		Short: "Display disk usage for all mounts",
 		Run: func(cmd *cobra.Command, args []string) {
-			err := diskService.ShowDiskSpace()
+			content, err := diskService.ShowDiskSpace()
+			logger.Write(content)
 			if err != nil {
 				panic(err)
 			}
@@ -26,7 +29,8 @@ func NewShowCmd(diskService pkg.DiskServiceInterface) *cobra.Command {
 		Args:  cobra.MinimumNArgs(3),
 		Run: func(cmd *cobra.Command, args []string) {
 			directory := args[len(args)-1]
-			err := diskService.ShowFolderSize(directory)
+			content, err := diskService.ShowFolderSize(directory)
+			logger.Write(content)
 			if err != nil {
 				panic(err)
 			}
@@ -43,7 +47,8 @@ func NewShowCmd(diskService pkg.DiskServiceInterface) *cobra.Command {
 				panic(err)
 			}
 			directory := args[len(args)-1]
-			cmdErr := diskService.ShowFolderSizeWithLimit(directory, size)
+			content, cmdErr := diskService.ShowFolderSizeWithLimit(directory, size)
+			logger.Write(content)
 			if cmdErr != nil {
 				panic(cmdErr)
 			}

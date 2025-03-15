@@ -6,7 +6,11 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/wassef911/lets/pkg"
 )
+
+var logger = pkg.NewLogger()
 
 type MockInputOutputService struct {
 	mock.Mock
@@ -25,18 +29,18 @@ type MockDiskService struct {
 	mock.Mock
 }
 
-func (m *MockDiskService) ShowDiskSpace() error {
+func (m *MockDiskService) ShowDiskSpace() ([]string, error) {
 	fmt.Println("MockDiskService - ------------------------------------------")
 	m.Called()
-	return nil
+	return []string{}, nil
 }
-func (m *MockDiskService) ShowFolderSize(path string) error {
+func (m *MockDiskService) ShowFolderSize(path string) (string, error) {
 	m.Called(path)
-	return nil
+	return "", nil
 }
-func (m *MockDiskService) ShowFolderSizeWithLimit(dir string, minSize float64) error {
+func (m *MockDiskService) ShowFolderSizeWithLimit(dir string, minSize float64) ([]string, error) {
 	m.Called(dir, minSize)
-	return nil
+	return []string{}, nil
 }
 
 type mockProcService struct {
@@ -78,7 +82,7 @@ func (m *mockSearchService) FindFiles(glob, directory string, days int) error {
 
 func TestNewGetCmd(t *testing.T) {
 	mockService := &MockInputOutputService{}
-	cmd := NewGetCmd(mockService)
+	cmd := NewGetCmd(logger, mockService)
 	mockService.On("GetColumn", "test.csv", 2).Once().Return(nil)
 
 	cmd.Run(&cobra.Command{}, []string{"column", "2", "from", "test.csv"})
@@ -88,7 +92,7 @@ func TestNewGetCmd(t *testing.T) {
 
 func TestReplaceCmd(t *testing.T) {
 	mockService := &MockInputOutputService{}
-	cmd := NewReplaceCmd(mockService)
+	cmd := NewReplaceCmd(logger, mockService)
 	mockService.On("ReplaceText", "test.txt", "foo", "bar").Once().Return(nil)
 
 	cmd.Run(&cobra.Command{}, []string{"foo", "with", "bar", "in", "test.txt"})
@@ -107,7 +111,7 @@ func TestRootCmd(t *testing.T) {
 	mockProcService.On("Processes").Once().Return(nil)
 	mockProcService.On("Resources").Once().Return(nil)
 
-	cmd := NewRootCmd(mockDiskService, mockInputOutputService, mockProcService, mockSearchService)
+	cmd := NewRootCmd(logger, mockDiskService, mockInputOutputService, mockProcService, mockSearchService)
 	cmd.Run(&cobra.Command{}, []string{})
 	cmd.SetArgs([]string{"show", "disk", "space"})
 	cmd.Execute()

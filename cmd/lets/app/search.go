@@ -9,7 +9,10 @@ import (
 	"github.com/wassef911/lets/pkg"
 )
 
-func NewSearchCmd(searchService pkg.SearchServiceInterface) *cobra.Command {
+func NewSearchCmd(
+	logger pkg.LoggerInterface,
+
+	searchService pkg.SearchServiceInterface) *cobra.Command {
 	searchCmd := &cobra.Command{
 		Use:   "search files for <pattern> in [directory]",
 		Short: "Search files containing pattern",
@@ -36,7 +39,10 @@ func NewSearchCmd(searchService pkg.SearchServiceInterface) *cobra.Command {
 	return searchCmd
 }
 
-func NewCountMatchesCmd(searchService pkg.SearchServiceInterface) *cobra.Command {
+func NewCountMatchesCmd(
+	logger pkg.LoggerInterface,
+
+	searchService pkg.SearchServiceInterface) *cobra.Command {
 	countMatchesCmd := &cobra.Command{
 		Use:   "count matches <pattern> in <file>",
 		Short: "Count pattern occurrences in file",
@@ -53,7 +59,10 @@ func NewCountMatchesCmd(searchService pkg.SearchServiceInterface) *cobra.Command
 	return countMatchesCmd
 }
 
-func NewFindFilesCmd(searchService pkg.SearchServiceInterface) *cobra.Command {
+func NewFindFilesCmd(
+	logger pkg.LoggerInterface,
+
+	searchService pkg.SearchServiceInterface) *cobra.Command {
 	findFilesCmd := &cobra.Command{
 		Use:   "find files named <glob> in <directory> older than <days> days",
 		Short: "Find files by name and age",

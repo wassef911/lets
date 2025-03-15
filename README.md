@@ -64,16 +64,17 @@ $ lets replace "foo" with "bar" in file.txt
 
 
 #### TODO
-* manuall test all commands
+<!-- * manuall test all commands
     - search done
     - disk done 
     - proc done
-    - io
-* handle errors and panic properly 
+    - io -->
+<!-- * handle errors and panic properly  -->
 * better validation
-* write tests for all packages
+* fix returns + logger instead of printing for better tests
+* write tests for pkg
 * ci cd 
 
-#### features ? 
+#### Potential Features ? 
 * getting files other than CSV
 * structured output / better logger

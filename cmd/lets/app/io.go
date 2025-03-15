@@ -8,7 +8,10 @@ import (
 	"github.com/wassef911/lets/pkg"
 )
 
-func NewGetCmd(inputOutputService pkg.InputOutputServiceInterface) *cobra.Command {
+func NewGetCmd(
+	logger pkg.LoggerInterface,
+
+	inputOutputService pkg.InputOutputServiceInterface) *cobra.Command {
 	getCmd := &cobra.Command{
 		Use:   "get column [col] from [csvPath]",
 		Short: "Prints the values of a column in a CSV file",
@@ -28,7 +31,10 @@ func NewGetCmd(inputOutputService pkg.InputOutputServiceInterface) *cobra.Comman
 	return getCmd
 }
 
-func NewReplaceCmd(inputOutputService pkg.InputOutputServiceInterface) *cobra.Command {
+func NewReplaceCmd(
+	logger pkg.LoggerInterface,
+
+	inputOutputService pkg.InputOutputServiceInterface) *cobra.Command {
 	ReplaceCmd := &cobra.Command{
 		Use:   "replace [foo] with [bar] in [filename]",
 		Short: "In-place text replacement",

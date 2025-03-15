@@ -7,6 +7,7 @@ import (
 )
 
 func NewRootCmd(
+	logger pkg.LoggerInterface,
 	diskService pkg.DiskServiceInterface,
 	inputOutputService pkg.InputOutputServiceInterface,
 	procService pkg.ProcServiceInterface,
@@ -22,14 +23,14 @@ func NewRootCmd(
 	}
 
 	// create commands
-	ShowCmd := NewShowCmd(diskService)
-	getCmd := NewGetCmd(inputOutputService)
-	ReplaceCmd := NewReplaceCmd(inputOutputService)
-	InspectCmd := NewProcCmd(procService)
-	TerminateCmd := NewTerminatedCmd(procService)
-	searchFilesCmd := NewSearchCmd(searchService)
-	countMatchesCmd := NewCountMatchesCmd(searchService)
-	findFilesCmd := NewFindFilesCmd(searchService)
+	ShowCmd := NewShowCmd(logger, diskService)
+	getCmd := NewGetCmd(logger, inputOutputService)
+	ReplaceCmd := NewReplaceCmd(logger, inputOutputService)
+	InspectCmd := NewProcCmd(logger, procService)
+	TerminateCmd := NewTerminatedCmd(logger, procService)
+	searchFilesCmd := NewSearchCmd(logger, searchService)
+	countMatchesCmd := NewCountMatchesCmd(logger, searchService)
+	findFilesCmd := NewFindFilesCmd(logger, searchService)
 
 	// hook to root
 	rootCmd.AddCommand(ShowCmd)

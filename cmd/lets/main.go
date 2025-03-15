@@ -10,11 +10,13 @@ import (
 
 func main() {
 	// create services
+	logger := pkg.NewLogger()
 	diskService := pkg.NewDisk()
 	inputOutputService := pkg.NewInputOutput()
 	procService := pkg.NewProc()
 	searchService := pkg.NewSearch(true)
 	rootCmd := app.NewRootCmd(
+		logger,
 		diskService,
 		inputOutputService,
 		procService,

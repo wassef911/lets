@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -12,7 +11,7 @@ import (
 )
 
 type ProcServiceInterface interface {
-	Processes() error
+	Processes() (string, error)
 	Resources() error
 	KillProcessByName(processName string) error
 }
@@ -26,19 +25,18 @@ func NewProc() *ProcService {
 }
 
 // lists all running processes (equivalent to `ps aux`).
-func (p *ProcService) Processes() error {
+func (p *ProcService) Processes() (string, error) {
 	if !CommandExists("ps") {
-		return errors.New("'ps' command not found. Please ensure it is installed")
+		return "", errors.New("'ps' command not found. Please ensure it is installed")
 	}
 
 	cmd := exec.Command("ps", "aux")
 	output, err := cmd.Output()
 	if err != nil {
-		return errors.New("failed to list processes: " + err.Error())
+		return "", errors.New("failed to list processes: " + err.Error())
 	}
 
-	fmt.Println(string(output))
-	return nil
+	return string(output), nil
 }
 
 // provides a live system resource view (equivalent to `htop`).
@@ -105,7 +103,6 @@ func (p *ProcService) KillProcessByName(processName string) error {
 			return errors.New("failed to find process with PID " + strconv.Itoa(pid) + " : " + err.Error())
 		}
 
-		fmt.Printf("Successfully killed process %s (PID %d)\n", processName, pid)
 	}
 
 	return nil

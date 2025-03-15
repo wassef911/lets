@@ -11,8 +11,8 @@ import (
 )
 
 type SearchServiceInterface interface {
-	SearchFiles(pattern, directory string) error
-	CountMatches(pattern, filename string) error
+	SearchFiles(pattern, directory string) ([]string, error)
+	CountMatches(pattern, filename string) (string, error)
 	FindFiles(glob, directory string, days int) error
 }
 
@@ -26,25 +26,26 @@ func NewSearch(caseSensitive bool) *SearchService {
 	return &SearchService{CaseSensitive: caseSensitive}
 }
 
-func (s *SearchService) SearchFiles(pattern, directory string) error {
+func (s *SearchService) SearchFiles(pattern, directory string) ([]string, error) {
 	reFlags := regexp.MustCompile("")
 	if !s.CaseSensitive {
 		reFlags = regexp.MustCompile(`(?i)`)
 	}
 	re := regexp.MustCompile(reFlags.String() + regexp.QuoteMeta(pattern))
+	result := []string{}
 	filepath.Walk(directory, func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
 			content, _ := ioutil.ReadFile(path)
 			if re.Match(content) {
-				fmt.Printf("Match found in: %s\n", path)
+				result = append(result, fmt.Sprintf("Match found in: %s\n", path))
 			}
 		}
 		return nil
 	})
-	return nil
+	return result, nil
 }
 
-func (s *SearchService) CountMatches(pattern, filename string) error {
+func (s *SearchService) CountMatches(pattern, filename string) (string, error) {
 	file, _ := os.Open(filename)
 	defer file.Close()
 
@@ -57,8 +58,7 @@ func (s *SearchService) CountMatches(pattern, filename string) error {
 			count++
 		}
 	}
-	fmt.Printf("Found %d matches in %s\n", count, filename)
-	return nil
+	return fmt.Sprintf("Found %d matches in %s\n", count, filename), nil
 }
 
 func (s *SearchService) FindFiles(glob, directory string, days int) error {

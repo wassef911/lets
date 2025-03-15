@@ -16,9 +16,9 @@ type MockInputOutputService struct {
 	mock.Mock
 }
 
-func (m *MockInputOutputService) GetColumn(filename string, columnIndex int) error {
+func (m *MockInputOutputService) GetColumn(filename string, columnIndex int) (string, error) {
 	m.Called(filename, columnIndex)
-	return nil
+	return "", nil
 }
 func (m *MockInputOutputService) ReplaceText(filename, oldText, newText string) error {
 	m.Called(filename, oldText, newText)
@@ -47,9 +47,9 @@ type mockProcService struct {
 	mock.Mock
 }
 
-func (m *mockProcService) Processes() error {
+func (m *mockProcService) Processes() (string, error) {
 	m.Called()
-	return nil
+	return "", nil
 }
 
 func (m *mockProcService) Resources() error {
@@ -66,13 +66,13 @@ type mockSearchService struct {
 	mock.Mock
 }
 
-func (m *mockSearchService) SearchFiles(pattern, directory string) error {
+func (m *mockSearchService) SearchFiles(pattern, directory string) ([]string, error) {
 	m.Called(pattern, directory)
-	return nil
+	return []string{}, nil
 }
-func (m *mockSearchService) CountMatches(pattern, filename string) error {
+func (m *mockSearchService) CountMatches(pattern, filename string) (string, error) {
 	m.Called(pattern, filename)
-	return nil
+	return "", nil
 }
 
 func (m *mockSearchService) FindFiles(glob, directory string, days int) error {

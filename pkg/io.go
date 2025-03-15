@@ -3,7 +3,6 @@ package pkg
 import (
 	"encoding/csv"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"strconv"
@@ -11,7 +10,7 @@ import (
 )
 
 type InputOutputServiceInterface interface {
-	GetColumn(filename string, columnIndex int) error
+	GetColumn(filename string, columnIndex int) (string, error)
 	ReplaceText(filename, oldText, newText string) error
 }
 
@@ -24,10 +23,10 @@ func NewInputOutput() *InputOutputService {
 }
 
 // extracts a specific column from a CSV file (equivalent to `awk '{print $N}'`).
-func (inou *InputOutputService) GetColumn(filename string, columnIndex int) error {
+func (inou *InputOutputService) GetColumn(filename string, columnIndex int) (string, error) {
 	file, err := os.Open(filename)
 	if err != nil {
-		return errors.New("failed to open file: " + err.Error())
+		return "", errors.New("failed to open file: " + err.Error())
 	}
 	defer file.Close()
 
@@ -40,18 +39,17 @@ func (inou *InputOutputService) GetColumn(filename string, columnIndex int) erro
 			break
 		}
 		if err != nil {
-			return errors.New("failed to read CSV: " + err.Error())
+			return "", errors.New("failed to read CSV: " + err.Error())
 		}
 
 		if columnIndex < 0 || columnIndex >= len(record) {
-			return errors.New("column index " + strconv.Itoa(columnIndex) + "is out of bounds")
+			return "", errors.New("column index " + strconv.Itoa(columnIndex) + "is out of bounds")
 		}
 
 		columnData = append(columnData, record[columnIndex])
 	}
 
-	fmt.Println(strings.Join(columnData, "\n"))
-	return nil
+	return strings.Join(columnData, "\n"), nil
 }
 
 // performs in-place text replacement in a file (equivalent to `sed -i 's/old/new/g'`).

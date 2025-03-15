@@ -116,10 +116,10 @@ func TestRootCmd(t *testing.T) {
 	cmd.SetArgs([]string{"show", "disk", "space"})
 	cmd.Execute()
 
-	cmd.SetArgs([]string{"show", "proc", "processes"})
+	cmd.SetArgs([]string{"inspect", "processes"})
 	cmd.Execute()
 
-	cmd.SetArgs([]string{"show", "proc", "resources"})
+	cmd.SetArgs([]string{"inspect", "resources"})
 	cmd.Execute()
 
 	mockDiskService.AssertExpectations(t)

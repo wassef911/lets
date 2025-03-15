@@ -3,13 +3,9 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Version Tag (vX.X.X)"
+        description: "Version Tag (v1.0.0)"
         type: string
         required: true
-      prerelease:
-        type: boolean
-        required: false
-        default: yes
         
 jobs:
   build:
@@ -25,7 +21,7 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.20.3
+          go-version: 1.24.1
           stable: false
 
       - name: Go Test
@@ -33,7 +29,6 @@ jobs:
           make test
           
       - name: Cross Build
-        # You may pin to the exact commit or the version.
         run: |
           make package
       - name: Create Tag
@@ -42,33 +37,3 @@ jobs:
           version: ${{ github.event.inputs.tag }}
           message: "create tag"
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create changelog text
-        id: changelog
-        uses: loopwerk/tag-changelog@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Print changelog
-        run: |
-          cat <<EOF
-          ${{ steps.changelog.outputs.changes }}
-          EOF
-      - name: Release & Assets
-        uses: Hs1r1us/Release-AIO@v1.0
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # The name of the tag
-          tag_name:  ${{ github.event.inputs.tag }} 
-          # The name of the release
-          release_name: ${{ github.event.inputs.tag }} 
-          # Text describing the contents of the tag
-          body: ${{ steps.changelog.outputs.changes }}
-          # The path to the asset you want to upload
-          asset_files: dist/
-          # `true` to create a draft (unpublished) release, `false` to create a published one. Default: `false`
-          draft: false
-          # `true` to identify the release as a prerelease. `false` to identify the release as a full release. Default: `false`
-          prerelease: ${{ github.event.inputs.prerelease }}          
-          

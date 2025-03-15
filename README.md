@@ -1,3 +1,5 @@
+Human-friendly system administration toolkit, reads like english and has most common chores...  
+
 ## 1. Searching Files & Text
 Replace: grep, find, and basic awk
 
@@ -71,9 +73,9 @@ $ lets replace "foo" with "bar" in file.txt
     - io -->
 <!-- * handle errors and panic properly  -->
 * better validation
-* fix returns + logger instead of printing for better tests
-* write tests for pkg
-* ci cd 
+<!-- * fix returns + logger instead of printing for better tests -->
+<!-- * write tests for pkg -->
+<!-- * ci cd  -->
 
 #### Potential Features ? 
 * getting files other than CSV

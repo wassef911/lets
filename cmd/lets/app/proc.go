@@ -6,7 +6,7 @@ import (
 	"github.com/wassef911/lets/pkg"
 )
 
-func newProcCmd(procService pkg.ProcServiceInterface) *cobra.Command {
+func NewProcCmd(procService pkg.ProcServiceInterface) *cobra.Command {
 	ProcessesCmd := &cobra.Command{
 		Use:   "processes",
 		Short: "List all running processes",
@@ -37,7 +37,7 @@ func newProcCmd(procService pkg.ProcServiceInterface) *cobra.Command {
 	return InspectCmd
 }
 
-func newTerminatedCmd(procService pkg.ProcServiceInterface) *cobra.Command {
+func NewTerminatedCmd(procService pkg.ProcServiceInterface) *cobra.Command {
 	TerminateCmd := &cobra.Command{
 		Use:   "kill process [name]",
 		Short: "Terminate by process name",

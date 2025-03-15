@@ -17,6 +17,8 @@ type ProcServiceInterface interface {
 	KillProcessByName(processName string) error
 }
 
+var _ ProcServiceInterface = &ProcService{}
+
 type ProcService struct{}
 
 func NewProc() *ProcService {

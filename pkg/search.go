@@ -15,6 +15,9 @@ type SearchServiceInterface interface {
 	CountMatches(pattern, filename string) error
 	FindFiles(glob, directory string, days int) error
 }
+
+var _ SearchServiceInterface = &SearchService{}
+
 type SearchService struct {
 	CaseSensitive bool
 }

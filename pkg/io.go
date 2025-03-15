@@ -15,6 +15,8 @@ type InputOutputServiceInterface interface {
 	ReplaceText(filename, oldText, newText string) error
 }
 
+var _ InputOutputServiceInterface = &InputOutputService{}
+
 type InputOutputService struct{}
 
 func NewInputOutput() *InputOutputService {

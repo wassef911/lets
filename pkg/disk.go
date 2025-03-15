@@ -15,6 +15,8 @@ type DiskServiceInterface interface {
 	ShowFolderSizeWithLimit(dir string, minSize float64) error
 }
 
+var _ DiskServiceInterface = &DiskService{}
+
 type DiskService struct{}
 
 func NewDisk() *DiskService {

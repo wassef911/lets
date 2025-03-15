@@ -16,17 +16,21 @@ func NewRootCmd(
 		Use:   "lets",
 		Short: "Human-friendly system administration toolkit",
 		Long:  `Human-friendly system administration toolkit.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			cmd.Help()
+		},
 	}
 
 	// create commands
-	ShowCmd := newShowCmd(diskService)
-	getCmd := newGetCmd(inputOutputService)
-	ReplaceCmd := newReplaceCmd(inputOutputService)
-	InspectCmd := newProcCmd(procService)
-	TerminateCmd := newTerminatedCmd(procService)
-	searchFilesCmd := newSearchCmd(searchService)
-	countMatchesCmd := newCountMatchesCmd(searchService)
-	findFilesCmd := newFindFilesCmd(searchService)
+	ShowCmd := NewShowCmd(diskService)
+	getCmd := NewGetCmd(inputOutputService)
+	ReplaceCmd := NewReplaceCmd(inputOutputService)
+	InspectCmd := NewProcCmd(procService)
+	TerminateCmd := NewTerminatedCmd(procService)
+	searchFilesCmd := NewSearchCmd(searchService)
+	countMatchesCmd := NewCountMatchesCmd(searchService)
+	findFilesCmd := NewFindFilesCmd(searchService)
+
 	// hook to root
 	rootCmd.AddCommand(ShowCmd)
 	rootCmd.AddCommand(getCmd, ReplaceCmd)

@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/spf13/cobra"
@@ -25,6 +26,7 @@ type MockDiskService struct {
 }
 
 func (m *MockDiskService) ShowDiskSpace() error {
+	fmt.Println("MockDiskService - ------------------------------------------")
 	m.Called()
 	return nil
 }
@@ -76,7 +78,7 @@ func (m *mockSearchService) FindFiles(glob, directory string, days int) error {
 
 func TestNewGetCmd(t *testing.T) {
 	mockService := &MockInputOutputService{}
-	cmd := newGetCmd(mockService)
+	cmd := NewGetCmd(mockService)
 	mockService.On("GetColumn", "test.csv", 2).Once().Return(nil)
 
 	cmd.Run(&cobra.Command{}, []string{"column", "2", "from", "test.csv"})
@@ -86,7 +88,7 @@ func TestNewGetCmd(t *testing.T) {
 
 func TestReplaceCmd(t *testing.T) {
 	mockService := &MockInputOutputService{}
-	cmd := newReplaceCmd(mockService)
+	cmd := NewReplaceCmd(mockService)
 	mockService.On("ReplaceText", "test.txt", "foo", "bar").Once().Return(nil)
 
 	cmd.Run(&cobra.Command{}, []string{"foo", "with", "bar", "in", "test.txt"})
@@ -100,27 +102,21 @@ func TestRootCmd(t *testing.T) {
 	mockSearchService := &mockSearchService{}
 	mockInputOutputService := &MockInputOutputService{}
 
-	cmd := NewRootCmd(mockDiskService, mockInputOutputService, mockProcService, mockSearchService)
-
 	mockDiskService.On("ShowDiskSpace").Once().Return(nil)
-	mockDiskService.On("ShowFolderSize", "test").Once().Return(nil)
-	mockDiskService.On("ShowFolderSizeWithLimit", "test", 10.0).Once().Return(nil)
 
 	mockProcService.On("Processes").Once().Return(nil)
 	mockProcService.On("Resources").Once().Return(nil)
-	mockProcService.On("KillProcessByName", "test").Once().Return(nil)
 
-	mockSearchService.On("SearchFiles", "pattern", "test").Once().Return(nil)
-	mockSearchService.On("CountMatches", "pattern", "test").Once().Return(nil)
-	mockSearchService.On("FindFiles", "glob", "test", 10).Once().Return(nil)
+	cmd := NewRootCmd(mockDiskService, mockInputOutputService, mockProcService, mockSearchService)
+	cmd.Run(&cobra.Command{}, []string{})
+	cmd.SetArgs([]string{"show", "disk", "space"})
+	cmd.Execute()
 
-	mockInputOutputService.On("GetColumn", "test.csv", 2).Once().Return(nil)
-	mockInputOutputService.On("ReplaceText", "test.txt", "foo", "bar").Once().Return(nil)
+	cmd.SetArgs([]string{"show", "proc", "processes"})
+	cmd.Execute()
 
-	cmd.Run(&cobra.Command{}, []string{"lets", "show", "disk", "space"})
-
-	// cmd.Run(&cobra.Command{}, []string{"show", "proc", "processes"})
-	// cmd.Run(&cobra.Command{}, []string{"show", "proc", "resources"})
+	cmd.SetArgs([]string{"show", "proc", "resources"})
+	cmd.Execute()
 
 	mockDiskService.AssertExpectations(t)
 

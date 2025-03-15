@@ -23,10 +23,10 @@ func NewGetCmd(
 				panic(err)
 			}
 			content, cmdErr := inputOutputService.GetColumn(csvPath, col)
-			logger.Write(content)
 			if cmdErr != nil {
 				panic(cmdErr)
 			}
+			logger.Write(content)
 		},
 	}
 	return getCmd

@@ -31,10 +31,10 @@ func NewSearchCmd(
 			}
 
 			content, err := searchService.SearchFiles(pattern, directory)
-			logger.Write(content)
 			if err != nil {
 				panic(err)
 			}
+			logger.Write(content)
 		},
 	}
 	return searchCmd
@@ -52,10 +52,10 @@ func NewCountMatchesCmd(
 			pattern := args[1]
 			file := args[3]
 			content, err := searchService.CountMatches(pattern, file)
-			logger.Write(content)
 			if err != nil {
 				panic(err)
 			}
+			logger.Write(content)
 		},
 	}
 	return countMatchesCmd
@@ -72,8 +72,7 @@ func NewFindFilesCmd(
 		Run: func(cmd *cobra.Command, args []string) {
 			glob, directory, days, err := pkg.ParseFind(args)
 			if err != nil {
-				fmt.Println(err)
-				return
+				panic(err)
 			}
 			cmdErr := searchService.FindFiles(glob, directory, days)
 			if cmdErr != nil {

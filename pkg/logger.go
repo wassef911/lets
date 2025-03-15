@@ -7,7 +7,6 @@ import (
 )
 
 type LoggerInterface interface {
-	Error(message string)
 	Write(message interface{})
 }
 
@@ -18,10 +17,6 @@ type Logger struct {
 
 func NewLogger() *Logger {
 	return &Logger{}
-}
-
-func (l *Logger) Error(message string) {
-	fmt.Println("Error: " + message)
 }
 
 func (l *Logger) Write(arg interface{}) {

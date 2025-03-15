@@ -16,10 +16,10 @@ func NewProcCmd(
 		Short: "List all running processes",
 		Run: func(cmd *cobra.Command, args []string) {
 			content, err := procService.Processes()
-			logger.Write(content)
 			if err != nil {
 				panic(err)
 			}
+			logger.Write(content)
 		},
 	}
 
@@ -52,10 +52,10 @@ func NewTerminatedCmd(
 		Run: func(cmd *cobra.Command, args []string) {
 			name := args[len(args)-1]
 			err := procService.KillProcessByName(name)
-			logger.Write(fmt.Sprintf("Successfully killed process %s\n", name))
 			if err != nil {
 				panic(err)
 			}
+			logger.Write(fmt.Sprintf("Successfully killed process %s\n", name))
 		},
 	}
 	return TerminateCmd

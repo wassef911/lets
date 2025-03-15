@@ -42,7 +42,6 @@ package: all
 
 	ARCH_RELEASE_DIRS=$$(find dist -type d -name "*_*"); \
 	for ARCH_RELEASE_DIR in $$ARCH_RELEASE_DIRS; do \
-		cp conf/config.default.toml $$ARCH_RELEASE_DIR/config.toml; \
 		rm -rfd $$ARCH_RELEASE_DIR; \
 	done
 
